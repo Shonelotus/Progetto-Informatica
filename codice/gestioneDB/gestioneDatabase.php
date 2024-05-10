@@ -21,11 +21,11 @@ class gestioneDatabase
         $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
     }
 
-    public function controlloCredenziali($user, $password)
+    public function controlloCredenziali($email, $password)
     {
-        $sql = "SELECT * FROM utenti WHERE user=? AND password=MD5(?)";
+        $sql = "SELECT * FROM user WHERE email=? AND password=MD5(?)";
         $statement = $this->conn->prepare($sql);
-        $statement->bind_param("ss", $user, $password);
+        $statement->bind_param("ss", $email, $password);
         $statement->execute();
         $result = $statement->get_result();
         if ($result->num_rows == 0) 
@@ -34,11 +34,11 @@ class gestioneDatabase
             return true;     
     }
 
-    public function takeId($user, $password)
+    public function takeId($email, $password)
     {
-        $sql = "SELECT id FROM utenti WHERE user=? AND password=MD5(?)";
+        $sql = "SELECT id FROM user WHERE email=? AND password=MD5(?)";
         $statement = $this->conn->prepare($sql);
-        $statement->bind_param("ss", $user, $password);
+        $statement->bind_param("ss", $email, $password);
         $statement->execute();
         $result = $statement->get_result();
         if ($result->num_rows == 0) 
@@ -96,17 +96,22 @@ class gestioneDatabase
         return $success;
     }
 
-    public function checkAdmin($username, $password)
+    public function checkAdmin($username, $password) 
     {
-        $sql = "SELECT * FROM utenti WHERE user = ? and password = md5(?) and isAdmin = 1";
+        $sql = "SELECT user.* FROM user
+                JOIN admin ON user.id = admin.idUser
+                WHERE user.email = ? AND user.password = MD5(?)";
+    
         $statement = $this->conn->prepare($sql);
         $statement->bind_param("ss", $username, $password);
         $statement->execute();
         $result = $statement->get_result();
-        if ($result->num_rows == 0) 
+    
+        if ($result->num_rows == 0) {
             return false;
-        else if ($result->num_rows == 1) 
-            return true;     
+        } else if ($result->num_rows == 1) {
+            return true;
+        }
     }
 
     public function getProdotti()
