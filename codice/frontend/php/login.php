@@ -1,5 +1,5 @@
 <?php
-if(!isset($_SESSION))
+/*if(!isset($_SESSION))
 {
     session_start();
 }
@@ -15,7 +15,7 @@ else if($_SESSION["admin"] == 0)
 else
 {
     header('Location: adminPage.php');
-}
+}*/
 ?>
 
 <!DOCTYPE html>
@@ -69,10 +69,14 @@ else
             if (status == false) 
             {
                 alert("Credenziali errate");
-            } else if (status === "admin") {
+            } 
+            else if (status === "admin") 
+            {
                 window.location = "adminPage.php";
-            } else {
-                window.location = "registrati.php";
+            } 
+            else 
+            {
+                window.location = "homepage.php";
             }
         }
 

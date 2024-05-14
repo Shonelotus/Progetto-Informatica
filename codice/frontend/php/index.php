@@ -1,5 +1,5 @@
 <?php
-  if(!isset($_SESSION))
+  /*if(!isset($_SESSION))
   {
       session_start();
   }
@@ -10,8 +10,9 @@
   }
   else
   {
-      header('Location: adminPage.php');
-  }
+        //devo reindirizzare ad adminpage
+        header('Location: index.php');
+  }*/
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +39,7 @@
         }
 
         function register() {
-            window.location.href = "register.php"; // Adjust the redirection to the correct registration page URL
+            window.location.href = "registration.php"; // Adjust the redirection to the correct registration page URL
         }
     </script>
 </head>

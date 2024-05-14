@@ -23,7 +23,10 @@ class gestioneDatabase
 
     public function controlloCredenziali($email, $password)
     {
-        $sql = "SELECT * FROM user WHERE email=? AND password=MD5(?)";
+        $sql = "SELECT user.* FROM user
+                JOIN cliente ON user.id = cliente.idUser
+                WHERE user.email = ? AND user.password = MD5(?)"; 
+
         $statement = $this->conn->prepare($sql);
         $statement->bind_param("ss", $email, $password);
         $statement->execute();
@@ -36,7 +39,9 @@ class gestioneDatabase
 
     public function takeId($email, $password)
     {
-        $sql = "SELECT id FROM user WHERE email=? AND password=MD5(?)";
+        $sql = "SELECT user.id* FROM user
+                JOIN cliente ON user.id = cliente.idUser
+                WHERE user.email = ? AND user.password = MD5(?)";
         $statement = $this->conn->prepare($sql);
         $statement->bind_param("ss", $email, $password);
         $statement->execute();
