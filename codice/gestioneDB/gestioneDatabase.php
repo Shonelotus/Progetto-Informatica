@@ -39,7 +39,7 @@ class gestioneDatabase
 
     public function takeId($email, $password)
     {
-        $sql = "SELECT user.id* FROM user
+        $sql = "SELECT user.id FROM user
                 JOIN cliente ON user.id = cliente.idUser
                 WHERE user.email = ? AND user.password = MD5(?)";
         $statement = $this->conn->prepare($sql);
@@ -53,7 +53,25 @@ class gestioneDatabase
             $riga = $result->fetch_assoc(); 
             return $riga['id']; 
         }
-    }   
+    } 
+    
+    public function takeIdAdmin($email, $password)
+    {
+        $sql = "SELECT user.id FROM user
+                JOIN admin ON user.id = admin.idUser
+                WHERE user.email = ? AND user.password = MD5(?)";
+        $statement = $this->conn->prepare($sql);
+        $statement->bind_param("ss", $email, $password);
+        $statement->execute();
+        $result = $statement->get_result();
+        if ($result->num_rows == 0) 
+            return false;
+        else if ($result->num_rows == 1) 
+        {
+            $riga = $result->fetch_assoc(); 
+            return $riga['id']; 
+        }
+    } 
 
     public function prendiTipologie()
     {
@@ -88,16 +106,65 @@ class gestioneDatabase
         return $success;
     }
 
-    public function aggiungiUtente($username, $password, $email)
+    public function aggiungiUtente($nome, $cognome, $email, $password, $numeroTessera, $numeroCartaCredito, $stato, $provincia, $paese, $cap, $via)
     {
-        $sql = "INSERT INTO utenti (user, password, email) VALUES (?, MD5(?), ?)";
+        //essendo una is-A devo mettere prima i dati nell'utente 
+        //poi nell'indirizzo 
+        //e per finire nel cliente con le due chiavi esterne 
+
+        // Inserisco l'utente
+        $sql = "INSERT INTO user (nome, cognome, email, password) VALUES (?, ?, ?, MD5(?))";
         $statement = $this->conn->prepare($sql);
 
         if(!$statement) 
             return false;
 
-        $statement->bind_param("sss", $username, $password, $email);
+        $statement->bind_param("ssss", $nome, $cognome, $email, $password);
         $success = $statement->execute();
+        $statement->close();
+
+        if(!$success)
+        {
+            // C'è stato un errore, quindi ritorno false e non vado avanti
+            return false;
+        }
+        
+        // Mi prendo l'id dell'utente appena inserito
+        $idUtente = $this->conn->insert_id;
+        
+        // Inserisco l'indirizzo
+        $sql = "INSERT INTO indirizzo (via, cap, paese, provincia, stato) VALUES (?, ?, ?, ?, ?)";
+        $statement = $this->conn->prepare($sql);
+        if(!$statement)
+        {
+            // C'è stato un errore, quindi ritorno false e non vado avanti
+            return false;
+        }
+        $statement->bind_param("sssss", $via, $cap, $paese, $provincia, $stato);
+        $success = $statement->execute();
+        $statement->close();
+
+        if(!$success)
+        {
+            // C'è stato un errore, quindi ritorno false e non vado avanti
+            return false;
+        }
+
+        // Mi prendo l'id dell'indirizzo appena inserito
+        $idIndirizzo = $this->conn->insert_id;
+
+        // Inserisco il cliente con i riferimenti a user e indirizzo
+        $sql = "INSERT INTO cliente (numeroTessera, numeroCarta, idUser, idIndirizzo) VALUES (?, ?, ?, ?)";
+        $statement = $this->conn->prepare($sql);
+        if(!$statement)
+        {
+            // C'è stato un errore, quindi ritorno false e non vado avanti
+            return false;
+        }
+        $statement->bind_param("isii", $numeroTessera, $numeroCartaCredito, $idUtente, $idIndirizzo);
+        $success = $statement->execute();
+        $statement->close();
+
         return $success;
     }
 
@@ -121,7 +188,6 @@ class gestioneDatabase
 
     public function getProdotti()
     {
-
         //devo selezionare tutte le informazioni dei vari prodotti percio
         //faccio la select di tutti i miei dati
         //from la tabella prodotto

@@ -56,6 +56,13 @@ if (isset($_GET["nome"], $_GET["cognome"], $_GET["email"], $_GET["password"], $_
         exit;
     }
 
+
+    /**
+     * ATTENZIONE
+     * LA TESSERA DEVE ESSERE UNIVOCA
+     */
+
+
     //la tessere almeno di 6
     if (!preg_match("/^\d{6}$/", $numeroTessera)) 
     {
@@ -80,7 +87,7 @@ if (isset($_GET["nome"], $_GET["cognome"], $_GET["email"], $_GET["password"], $_
         exit;
     }
 
-$risposta = $gest->aggiungiUtente($nome, $cognome, $email, /*$password, $numeroTessera, $numeroCartaCredito, $stato, $provincia, $paese, $cap, $via */);
+    $risposta = $gest->aggiungiUtente($nome, $cognome, $email, $password, $numeroTessera, $numeroCartaCredito, $stato, $provincia, $paese, $cap, $via);
     $id = $gest->takeId($email, $password);
     $_SESSION["id"] = $id;
     $_SESSION["admin"] = false;

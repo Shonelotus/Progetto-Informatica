@@ -22,7 +22,7 @@ if(isset($_GET["email"]) && isset($_GET["password"]) )
     if($rispostaAdmin === true)
     {
         $rispostaAdmin = "admin";
-        $id = $gest->takeId($email, $password);
+        $id = $gest->takeIdAdmin($email, $password);
         $_SESSION["id"] = $id;
         $_SESSION["admin"] = true;
         $gest->conn->close();
