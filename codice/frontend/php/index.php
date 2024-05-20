@@ -14,7 +14,7 @@
         header('Location: index.php');
     }*/
 
-    $key = parse_ini_file('key.ini');
+    $key = parse_ini_file(realpath("../../../key.ini"));
 
     $tokenKey = $key['MAPS_KEY'];
 ?>
