@@ -51,6 +51,12 @@ else
             font-weight: bold; /* Add font-weight */
             color: #007bff; /* Change title color */
         }
+        .form-group label {
+            color: #007bff; /* Change label color */
+        }
+        .form-control {
+            border-radius: 30px; /* Add border-radius to form inputs */
+        }
         .btn-primary, .btn-secondary {
             width: 100%; /* Make buttons full width */
             border-radius: 30px; /* Add border-radius */
@@ -74,7 +80,7 @@ else
                 }
                 else
                 {
-                    alert("Operazione non permesse");
+                    alert("Operazione non permessa");
                 }
             }
             //altrimenti se è uno slot o una stazione reindirizzo alla pagina stazioneSlot.php
