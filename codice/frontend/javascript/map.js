@@ -18,8 +18,10 @@ async function initMap() {
   const marker = new AdvancedMarkerElement({
     map: map,
     position: posizione,
-    title: "Morry",
+    title: "Stazione bici",
   });
 }
+
+
 
 initMap();

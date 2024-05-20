@@ -19,13 +19,18 @@ if(isset($_GET["scelta"]) && isset($_GET["azione"]) )
     
     if($scelta == "Bicicletta")
     {
-        if($azione == "Modifica")
+        if($azione = "Aggiungi")
+        {
+            //aggiungo lo slot
+
+        }
+        else if($azione = "Rimuovi")
+        {
+            //rimuovo lo slot
+        }
+        else 
         {
             //modifico la bici
-        }
-        else
-        {
-            return false;
         }
     }
     else if($scelta == "Slot")
@@ -45,19 +50,21 @@ if(isset($_GET["scelta"]) && isset($_GET["azione"]) )
         }
     }
     else
+    {
         if($azione = "Aggiungi")
         {
-            //aggiungo lo slot
+            //aggiungo la stazione
 
         }
         else if($azione = "Rimuovi")
         {
-            //rimuovo lo slot
+            //rimuovo la stazione
         }
         else 
         {
-            return false;
+            //modifico la stazione
         }
+    }
 
     $gest->conn->close();
     echo json_encode(["status" => $risposta]);

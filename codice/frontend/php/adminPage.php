@@ -8,13 +8,10 @@ if(!isset($_SESSION["id"]))
 {
     session_destroy();
 }
-else if($_SESSION["admin"] == 0)
-{
-    header('Location: homepage.php');
-}
 else
 {
-    header('Location: adminPage.php');
+    //devo reindirizzare ad adminpage
+    header('Location: index.php');
 }*/
 ?>
 
@@ -71,29 +68,13 @@ else
             let scelta = $('#scelta').val();
             let azione = $('#azione').val();
             
-            //se è una bicicletta e devo modificarla allora reindirizzo alla pagina bicicletta.php
-            if(scelta == "Bicicletta")
+            if(azione == "Modifica")
             {
-                if(azione == "Modifica")
-                {
-                    window.location.href = "bicicletta.php"
-                }
-                else
-                {
-                    alert("Operazione non permessa");
-                }
+                window.location.href = "modificaAdmin.php"
             }
-            //altrimenti se è uno slot o una stazione reindirizzo alla pagina stazioneSlot.php
-            else if(scelta == "Slot" || scelta == "Stazione")
+            else
             {
-                if(azione != "Modifica")
-                {
-                    window.location.href = "stazioneSlot.php"
-                }
-                else
-                {
-                    alert("Operazione non permessa");
-                }
+                window.location.href = "addRemoveAdmin.php"
             }
         }
 

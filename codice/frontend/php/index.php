@@ -15,7 +15,6 @@
     }*/
 
     $key = parse_ini_file(realpath("../../../key.ini"));
-
     $tokenKey = $key['MAPS_KEY'];
 ?>
 

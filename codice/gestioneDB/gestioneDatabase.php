@@ -21,6 +21,9 @@ class gestioneDatabase
         $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
     }
 
+    /**
+     * funzione che mi controlla le credenziali di un user
+     */
     public function controlloCredenziali($email, $password)
     {
         $sql = "SELECT user.* FROM user
@@ -37,6 +40,10 @@ class gestioneDatabase
             return true;     
     }
 
+
+    /**
+     * prendo l'id di un cliente
+     */
     public function takeId($email, $password)
     {
         $sql = "SELECT user.id FROM user
@@ -55,6 +62,9 @@ class gestioneDatabase
         }
     } 
     
+    /**
+     * prendo l'id di un admin
+     */
     public function takeIdAdmin($email, $password)
     {
         $sql = "SELECT user.id FROM user
@@ -73,38 +83,7 @@ class gestioneDatabase
         }
     } 
 
-    public function prendiTipologie()
-    {
-        $sql = "SELECT id, tipo FROM tipologia";
-        $statement = $this->conn->prepare($sql);
-        $statement->execute();
-        $result = $statement->get_result();
-        $tipologie = array();
 
-        while($row = mysqli_fetch_assoc($result)) 
-        {
-            $tipologie[] = array
-            (
-                "id" => $row['id'], 
-                "testo" => $row['tipo']
-            );        
-        }
-
-        return $tipologie;
-    }
-    
-    public function delete($id)
-    {
-        $sql = "DELETE FROM prodotto WHERE id=?";
-        $statement = $this->conn->prepare($sql);
-
-        if(!$statement) 
-            return false;
-
-        $statement->bind_param("i", $id);
-        $success = $statement->execute();
-        return $success;
-    }
 
     public function aggiungiUtente($nome, $cognome, $email, $password, $numeroTessera, $numeroCartaCredito, $stato, $provincia, $paese, $cap, $via)
     {
@@ -168,6 +147,9 @@ class gestioneDatabase
         return $success;
     }
 
+    /**
+     * controllo che sia un admin
+     */
     public function checkAdmin($username, $password) 
     {
         $sql = "SELECT user.* FROM user
@@ -186,6 +168,41 @@ class gestioneDatabase
         }
     }
 
+    /**
+     * funzione che mi permette di aggiungere un marker della mappa al db
+     */
+    public function addMarkerDB($name, $lat, $long, $description)
+    {
+        $sql = "INSERT INTO markers (name, lat, long, description) VALUES (?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("sdds", $name, $lat, $long, $description);
+
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
+    }
+
+    /**
+     * prendo tutti i markers
+     */
+    public function getMarkers()
+    {
+
+        $sql = "SELECT * FROM markers";
+        $result = $this->conn->query($sql);
+
+        $markers = [];
+
+        while ($row = $result->fetch_assoc()) 
+        {
+            $markers[] = $row;
+        }
+        return $markers;
+    }
+    
+
+    /*
     public function getProdotti()
     {
         //devo selezionare tutte le informazioni dei vari prodotti percio
@@ -248,7 +265,40 @@ class gestioneDatabase
         $stmt->close();
 
         return $success;
-    }
+    }*/
 
+    
+    /*public function prendiTipologie()
+    {
+        $sql = "SELECT id, tipo FROM tipologia";
+        $statement = $this->conn->prepare($sql);
+        $statement->execute();
+        $result = $statement->get_result();
+        $tipologie = array();
+
+        while($row = mysqli_fetch_assoc($result)) 
+        {
+            $tipologie[] = array
+            (
+                "id" => $row['id'], 
+                "testo" => $row['tipo']
+            );        
+        }
+
+        return $tipologie;
+    }
+    
+    public function delete($id)
+    {
+        $sql = "DELETE FROM prodotto WHERE id=?";
+        $statement = $this->conn->prepare($sql);
+
+        if(!$statement) 
+            return false;
+
+        $statement->bind_param("i", $id);
+        $success = $statement->execute();
+        return $success;
+    }*/
 }
 ?>
