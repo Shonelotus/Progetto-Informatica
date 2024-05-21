@@ -12,10 +12,10 @@ $gest = new gestioneDatabase();
 $gest->connettiDb();
 $risposta = "";
 
-if(isset($_GET["scelta"]) && isset($_GET["azione"]) ) 
+if(isset($_POST["scelta"]) && isset($_POST["azione"]) ) 
 {
-    $scelta = $_GET['scelta'];
-    $azione = $_GET['azione'];
+    $scelta = $_POST['scelta'];
+    $azione = $_POST['azione'];
     
     if($scelta == "Bicicletta")
     {

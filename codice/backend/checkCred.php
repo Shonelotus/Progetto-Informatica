@@ -12,10 +12,10 @@ $gest = new gestioneDatabase();
 $gest->connettiDb();
 $risposta = "";
 
-if(isset($_GET["email"]) && isset($_GET["password"]) ) 
+if(isset($_POST["email"]) && isset($_POST["password"]) ) 
 {
-    $email = $_GET['email'];
-    $password = $_GET['password']; 
+    $email = $_POST['email'];
+    $password = $_POST['password']; 
 
     //controllo che sia un admin
     $rispostaAdmin = $gest->checkAdmin($email, $password);

@@ -10,19 +10,19 @@ $gest = new gestioneDatabase();
 $gest->connettiDb();
 $risposta = "";
 
-if (isset($_GET["nome"], $_GET["cognome"], $_GET["email"], $_GET["password"], $_GET["numeroTessera"], $_GET["numeroCartaCredito"], $_GET["stato"], $_GET["provincia"], $_GET["paese"], $_GET["cap"], $_GET["via"])) 
+if (isset($_POST["nome"], $_POST["cognome"], $_POST["email"], $_POST["password"], $_POST["numeroTessera"], $_POST["numeroCartaCredito"], $_POST["stato"], $_POST["provincia"], $_POST["paese"], $_POST["cap"], $_POST["via"])) 
 {
-    $nome = $_GET['nome'];
-    $cognome = $_GET['cognome'];
-    $email = $_GET['email'];
-    $password = $_GET['password'];
-    $numeroTessera = $_GET['numeroTessera'];
-    $numeroCartaCredito = $_GET['numeroCartaCredito'];
-    $stato = $_GET['stato'];
-    $provincia = $_GET['provincia'];
-    $paese = $_GET['paese'];
-    $cap = $_GET['cap'];
-    $via = $_GET['via'];
+    $nome = $_POST['nome'];
+    $cognome = $_POST['cognome'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $numeroTessera = $_POST['numeroTessera'];
+    $numeroCartaCredito = $_POST['numeroCartaCredito'];
+    $stato = $_POST['stato'];
+    $provincia = $_POST['provincia'];
+    $paese = $_POST['paese'];
+    $cap = $_POST['cap'];
+    $via = $_POST['via'];
 
     //controllo che siano inseriti e non campi vuoit
     if (empty($nome) || empty($cognome) || empty($email) || empty($password) || empty($numeroTessera) || empty($numeroCartaCredito) || empty($stato) || empty($provincia) || empty($paese) || empty($cap) || empty($via)) 

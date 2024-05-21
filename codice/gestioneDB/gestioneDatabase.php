@@ -168,14 +168,15 @@ class gestioneDatabase
         }
     }
 
+
     /**
      * funzione che mi permette di aggiungere un marker della mappa al db
      */
-    public function addMarkerDB($name, $lat, $long, $description)
+    public function addStazione($name, $codice, $numSlot, $lat, $long)
     {
-        $sql = "INSERT INTO markers (name, lat, long, description) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO stazione (nome, codice, numeroSlot, latitude, longitude) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("sdds", $name, $lat, $long, $description);
+        $stmt->bind_param("siidd", $name, $codice, $numSlot, $lat, $long,);
 
         $success = $stmt->execute();
         $stmt->close();
@@ -188,8 +189,7 @@ class gestioneDatabase
      */
     public function getMarkers()
     {
-
-        $sql = "SELECT * FROM markers";
+        $sql = "SELECT * FROM stazione";
         $result = $this->conn->query($sql);
 
         $markers = [];
