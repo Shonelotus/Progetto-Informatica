@@ -32,7 +32,7 @@ $tokenKey = $key['MAPS_KEY'];
             border-radius: 30px;
         }
         #map {
-            border: 2px solid #fff;
+            border: 2px solid #007bff;
             border-radius: 15px;
         }
         .container {
@@ -75,12 +75,17 @@ $tokenKey = $key['MAPS_KEY'];
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <a class="navbar-brand" href="#">Azioni Admin</a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="homeAdmin()">Home Admin</a>
+            </li>
+        </ul>
     </nav>
     <div class="container mt-4">
         <div class="row">
             <div class="col-12 text-center">
-                <h1 class="header-text">Gestione Marker</h1>
-                <p class="lead">Cliccare sulla mappa per aggiungere, cliccare col tasto destro su una stazione per rimuoverla</p>
+                <h1 class="header-text">Gestione delle stazioni</h1>
+                <p class="lead">Cliccare sulla mappa per aggiungere una stazione, cliccare col tasto destro per rimuoverla</p>
             </div>
         </div>
         <div class="row mt-4">
@@ -95,6 +100,12 @@ $tokenKey = $key['MAPS_KEY'];
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
+
+        function homeAdmin()
+        {
+            window.location.href = "adminPage.php"
+        }
+
         $(document).ready(function() {
             var _mapAdmin = new mapAdmin();
             _mapAdmin.initMap();

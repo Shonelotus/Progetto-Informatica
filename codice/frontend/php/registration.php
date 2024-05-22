@@ -123,11 +123,13 @@
 
         }
 
-        function printResponse(status) {
+        function printResponse(status)
+        {
             if(status === false) {
                 alert("Registrazione fallita");
-            } else if(status === true) {
-                window.location = "index.php";
+            } else if(status === true) 
+            {
+                window.location.href = "index.php";
             }
         }
     </script>

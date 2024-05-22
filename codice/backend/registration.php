@@ -2,27 +2,25 @@
 include_once("../gestioneDB/gestioneDatabase.php");
 header('Content-Type: application/json');
 
-if (!isset($_SESSION)) {
-    session_start();
-}
-
 $gest = new gestioneDatabase();
 $gest->connettiDb();
 $risposta = "";
 
-if (isset($_POST["nome"], $_POST["cognome"], $_POST["email"], $_POST["password"], $_POST["numeroTessera"], $_POST["numeroCartaCredito"], $_POST["stato"], $_POST["provincia"], $_POST["paese"], $_POST["cap"], $_POST["via"])) 
+print_r($_GET);
+
+if(isset($_GET["nome"], $_GET["cognome"], $_GET["email"], $_GET["password"], $_GET["numeroTessera"], $_GET["numeroCartaCredito"], $_GET["stato"], $_GET["provincia"], $_GET["paese"], $_GET["cap"], $_GET["via"])) 
 {
-    $nome = $_POST['nome'];
-    $cognome = $_POST['cognome'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $numeroTessera = $_POST['numeroTessera'];
-    $numeroCartaCredito = $_POST['numeroCartaCredito'];
-    $stato = $_POST['stato'];
-    $provincia = $_POST['provincia'];
-    $paese = $_POST['paese'];
-    $cap = $_POST['cap'];
-    $via = $_POST['via'];
+    $nome = $_GET['nome'];
+    $cognome = $_GET['cognome'];
+    $email = $_GET['email'];
+    $password = $_GET['password'];
+    $numeroTessera = $_GET['numeroTessera'];
+    $numeroCartaCredito = $_GET['numeroCartaCredito'];
+    $stato = $_GET['stato'];
+    $provincia = $_GET['provincia'];
+    $paese = $_GET['paese'];
+    $cap = $_GET['cap'];
+    $via = $_GET['via'];
 
     //controllo che siano inseriti e non campi vuoit
     if (empty($nome) || empty($cognome) || empty($email) || empty($password) || empty($numeroTessera) || empty($numeroCartaCredito) || empty($stato) || empty($provincia) || empty($paese) || empty($cap) || empty($via)) 
@@ -85,16 +83,24 @@ if (isset($_POST["nome"], $_POST["cognome"], $_POST["email"], $_POST["password"]
         exit;
     }
 
-    $risposta = $gest->aggiungiUtente($nome, $cognome, $email, $password, $numeroTessera, $numeroCartaCredito, $stato, $provincia, $paese, $cap, $via);
-    $id = $gest->takeId($email, $password);
-    $_SESSION["id"] = $id;
-    $_SESSION["admin"] = false;
+    if(!$gest->uniqueDataUserDb($numeroTessera))
+    {
+        echo json_encode(["status" => false, "message" => "Errore nell'inserimento della tessera"]);
+        exit;
+    }
+    else
+    {
+        $risposta = $gest->aggiungiUtente($nome, $cognome, $email, $password, $numeroTessera, $numeroCartaCredito, $stato, $provincia, $paese, $cap, $via);
+        $id = $gest->takeId($email, $password);
+        $_SESSION["id"] = $id;
+        $_SESSION["admin"] = false;
+        echo json_encode(["status" => true, "message" => "Registrazione effettuata con successo"]);
+    }
 } 
 else 
 {
-    $risposta = false;
+    echo json_encode(["status" => false, "message" => "Errore del server"]);
 }
 
 $gest->conn->close();
-echo json_encode(["status" => $risposta]);
 ?>

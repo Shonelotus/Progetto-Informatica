@@ -1,110 +1,136 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagina Admin</title>
+    <title>Aggiunta bicicletta</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(90deg, rgba(0,123,255,1) 0%, rgba(40,167,69,1) 100%);
+            color: #fff;
+            overflow: hidden; /* Hide scroll bars */
+        }
+        .container {
+            max-width: 900px; /* Set a maximum width to the container */
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            border: none; /* Remove border */
+            border-radius: 15px; /* Add border-radius */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box-shadow */
+        }
+        .card-title {
+            font-size: 1.5rem; /* Adjust title font size */
+            font-weight: bold; /* Add font-weight */
+            color: #007bff; /* Change title color */
+        }
+        .form-group label {
+            color: #007bff; /* Change label color */
+        }
+        .form-control {
+            border-radius: 30px; /* Add border-radius to form inputs */
+        }
+        .btn-primary, .btn-secondary {
+            width: 100%; /* Make buttons full width */
+            border-radius: 30px; /* Add border-radius */
+            font-weight: bold; /* Add font-weight */
+            margin-top: 10px; /* Add top margin */
+        }
+    </style>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-
-        var risposta;
-
-        function callService(scelta, azione)
-        {
-            $.get("../../backend/actionAdmin.php", 
-            {
-                
-            }, function(data) {
-                printResponse(data["status"]);
+        $(document).ready(function() {
+            $("#registra").click(function() {
+                register();
             });
-        }
 
-        function controlAction() 
-        {
-            let scelta = $('#scelta').val();
-            let azione = $('#azione').val();
-
-            alert(scelta);
-            alert(azione);
-            if(scelta == "Bicicletta")
-            {
-                if(azione == "Modifica")
-                {
-                    windows.location = "bicicletta.php"
-                }
-                else
-                {
-                    alert("Operazione non permesse");
-                }
-            }
-            else if(scelta == "Slot" || scelta == "Stazione")
-            {
-                if(azione != "Modifica")
-                {
-                    windows.location = "stazioneSlot.php"
-                }
-                else
-                {
-                    alert("Operazione non permesse");
-                }
-            }
-
-        }
-
-        function printResponse(status) 
-        {
-            if (status == false) 
-            {
-                alert("Credenziali errate");
-            } 
-            else if (status === "admin") 
-            {
+            $("#tornaIndietro").click(function() {
                 window.location = "adminPage.php";
-            } 
-            else 
-            {
-                // Completa il blocco else o rimuovilo se non necessario
-                alert("Operazione non valida");
-            }
-        }
-
-        $(document).ready(function() 
-        {
-            $("#invia").click(function() 
-            {
-                // Controlla che la scelta sia valida
-                risposta = controlAction(); // Corretto il richiamo della funzione
-                if(!risposta)
-                {
-                    alert("Non puoi fare questa operazione")
-                }
-                else
-                {
-                    //devo reindirizzare, non fare il servizio
-                    let scelta = $('#scelta').val();
-                    let azione = $('#azione').val();
-                    callService(scelta, azione);
-                }
-                
             });
         });
 
+        function register() {
+            var gps = $('#gps').val().trim();
+            var rfid = $('#rfid').val().trim();
+            var latitude = $('#latitude').val().trim();
+            var longitude = $('#longitude').val().trim();
+
+            if (!gps || !rfid || !latitude || !longitude) {
+                alert("Tutti i campi sono obbligatori.");
+                return false;
+            }
+
+            if (!/^\d{5}$/.test(gps)) {
+                alert("Il codice del GPS deve essere di 5 cifre.");
+                return false;
+            }
+
+            if (!/^\d{4}$/.test(rfid)) {
+                alert("Il codice RFID deve essere di 4 cifre.");
+                return false;
+            }
+
+            var dati = {
+                gps: gps,
+                rfid: rfid,
+                latitude: latitude,
+                longitude: longitude,
+                
+            };
+
+            $.get("../../backend/AddBici.php", dati, function(data) {
+                printResponse(data);
+            });
+
+        }
+
+        function printResponse(data) 
+        {
+            alert(data["message"])
+        }
     </script>
 </head>
-
 <body>
-    <select id="scelta">
-        <option>Stazione</option>
-        <option>Slot</option>
-        <option>Bicicletta</option>
-    </select>
-    <select id="azione">
-        <option>Aggiungi</option>
-        <option>Rimuovi</option>
-        <option>Modifica</option>
-    </select>
-    <button name="invia" id="invia">Vai alla pagina</button>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center">Aggiungi una bicicletta</h2>
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
 
+                            <div class="form-group">
+                                <label for="gps">Codice GPS (5 cifre)</label>
+                                <input type="number" class="form-control" id="gps">
+                            </div>
+                            <div class="form-group">
+                                <label for="rfid">Codice RFID (4 cifre)</label>
+                                <input type="number" class="form-control" id="rfid">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="latitude">Latitudine</label>
+                                <input type="text" class="form-control" id="latitude">
+                            </div>
+                            <div class="form-group">
+                                <label for="longitude">Longitudine</label>
+                                <input type="text" class="form-control" id="longitude">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <button type="button" class="btn btn-primary" id="registra">Registrala</button>
+                    <button type="button" class="btn btn-secondary" id="tornaIndietro">Torna alla Home Admin</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
+

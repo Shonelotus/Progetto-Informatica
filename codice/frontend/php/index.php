@@ -1,19 +1,4 @@
 <?php
-    /*if(!isset($_SESSION))
-    {
-        session_start();
-    }
-
-    if(!isset($_SESSION["id"]))
-    {
-        session_destroy();
-    }
-    else
-    {
-        //devo reindirizzare ad adminpage
-        header('Location: index.php');
-    }*/
-
     $key = parse_ini_file(realpath("../../../key.ini"));
     $tokenKey = $key['MAPS_KEY'];
 ?>
@@ -69,6 +54,10 @@
                 font-size: 0.9rem; /* Adjust lead text size on smaller screens */
             }
         }
+        .navbar-brand img {
+            height: 40px; /* Adjust the height to make the logo smaller */
+            width: auto; /* Maintain the aspect ratio */
+        }
     </style>
     <script type="module" src="../javascript/map.js"></script>
     <script>
@@ -94,12 +83,12 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="#">Noleggio Biciclette</a>
+        <a class="navbar-brand" href="#">
+            <img src="../../../immagini/logo bici.png" alt="Logo">
+            Noleggio Biciclette
+        </a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="login()">Login</a>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" onclick="register()">Registrati</a>
                 </li>
@@ -129,7 +118,7 @@
     </div>
 
     <!-- Bootstrap JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

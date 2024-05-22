@@ -215,23 +215,73 @@ class gestioneDatabase
             return false;
         }
     }
-    
-    
 
-    /*
-    public function getProdotti()
+    public function addBiciDB($gps, $rfid, $longitude, $latitude)
     {
-        //devo selezionare tutte le informazioni dei vari prodotti percio
-        //faccio la select di tutti i miei dati
-        //from la tabella prodotto
-        //non ho le informazioni della tabella tipologia quindi faccio la join
-        //join che va a collegare l'id della tabella prodotto con l'id della tabella appartiene
-        //e che collega l'idTipologia della tabella appartiene con l'id della tabella tipologia
-        $sql = "
-        SELECT p.id, p.nome, p.prezzo, p.quantita, t.id, t.tipo
-        FROM prodotto AS p
-        JOIN appartiene AS a ON p.id = a.idProdotto
-        JOIN tipologia AS t ON a.idTipologia = t.id";
+        $sql = "INSERT INTO bicicletta (gps, codiceRFID, latitude, longitude) VALUES (?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("iidd", $gps, $rfid, $latitude, $longitude);
+
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
+    }
+
+    public function uniqueDataUserDb($numeroTessera)
+    {
+        $sql = "SELECT COUNT(*) as contatore FROM cliente WHERE numeroTessera = '$numeroTessera'";
+        $result = $this->conn->query($sql);
+
+        if($result) 
+        {
+            $row = $result->fetch_assoc();
+            $codiciUguali = $row['contatore'];
+            if ($codiciUguali > 0) 
+            {
+                $risposta = false;
+                return $risposta;
+            }
+            else
+            {
+                $risposta = true;
+                return $risposta;
+            }
+        } 
+        else
+            return false;
+    }
+
+    public function uniqueDataBiciDb($gps, $rfid)
+    {
+        $sql = "SELECT COUNT(*) as contatore FROM bicicletta WHERE gps = '$gps' or codiceRFID = '$rfid'";
+        $result = $this->conn->query($sql);
+
+        if($result) 
+        {
+            $row = $result->fetch_assoc();
+            $codiciUguali = $row['contatore'];
+            if ($codiciUguali > 0) 
+            {
+                $risposta = false;
+                return $risposta;
+            }
+            else
+            {
+                $risposta = true;
+                return $risposta;
+            }
+        } 
+        else
+        {
+            return false;
+        }
+    }
+    
+    public function getBici()
+    {
+
+        $sql = "SELECT b.id, b.gps, b.codiceRFID, b.latitude, b.longitude FROM bicicletta as b";
 
         $statement = $this->conn->prepare($sql);
         $statement->execute();
@@ -241,49 +291,32 @@ class gestioneDatabase
         //fin che ci sono risultati
         while($row = mysqli_fetch_assoc($result)) 
         {
-            $prodotti[] = array
+            $biciclette[] = array
             (
                 "id" => $row['id'], 
-                "nome" => $row['nome'],
-                "prezzo" => $row['prezzo'],
-                "quantita" => $row['quantita'],
-                "tipologia" => $row['tipo']
+                "gps" => $row['gps'],
+                "rfid" => $row['codiceRFID'],
+                "latitudine" => $row['latitude'],
+                "longitudine" => $row['longitude']
             );
         }
 
-        return $prodotti;
+        return $biciclette;
     }
 
-    public function aggiungiProdotto($nome, $prezzo, $quantita, $tipologiaId)
+    public function deleteBici($id)
     {
-        $sql = "INSERT INTO prodotto (nome, prezzo, quantita) VALUES (?, ?, ?)";
-        $stmt = $this->conn->prepare($sql);
-        if (!$stmt) {
-            return false; 
-        }
-        $stmt->bind_param("sdi", $nome, $prezzo, $quantita); 
-        $success = $stmt->execute();
-        $stmt->close();
+        $sql = "DELETE FROM bicicletta WHERE id=?";
+        $statement = $this->conn->prepare($sql);
 
-        if (!$success) {
-            return false; 
-        }
+        if(!$statement) 
+            return false;
 
-        $prodottoId = $this->conn->insert_id;
-
-        $sql = "INSERT INTO appartiene (idProdotto, idTipologia) VALUES (?, ?)";
-        $stmt = $this->conn->prepare($sql);
-        if (!$stmt) {
-            return false; 
-        }
-        $stmt->bind_param("ii", $prodottoId, $tipologiaId); 
-        $success = $stmt->execute();
-        $stmt->close();
-
+        $statement->bind_param("i", $id);
+        $success = $statement->execute();
         return $success;
-    }*/
+    }
 
-    
     /*public function prendiTipologie()
     {
         $sql = "SELECT id, tipo FROM tipologia";
@@ -302,19 +335,8 @@ class gestioneDatabase
         }
 
         return $tipologie;
-    }
-    
-    public function delete($id)
-    {
-        $sql = "DELETE FROM prodotto WHERE id=?";
-        $statement = $this->conn->prepare($sql);
-
-        if(!$statement) 
-            return false;
-
-        $statement->bind_param("i", $id);
-        $success = $statement->execute();
-        return $success;
     }*/
+    
+
 }
 ?>

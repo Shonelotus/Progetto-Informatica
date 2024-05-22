@@ -20,7 +20,7 @@ else
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagina Admin</title>
+    <title>Home Admin</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -68,13 +68,17 @@ else
             let scelta = $('#scelta').val();
             let azione = $('#azione').val();
             
-            if(azione == "Modifica")
+            if(azione == "Modifica" || azione == "Rimuovi" && scelta == "Bicicletta")
             {
-                window.location.href = "modificaAdmin.php"
+                window.location.href = "rimuoviBici.php"
+            }
+            else if(azione == "Aggiungi" && scelta == "Bicicletta")
+            {
+                window.location.href = "bicicletta.php"
             }
             else
             {
-                window.location.href = "addRemoveAdmin.php"
+                window.location.href = "stazione.php"
             }
         }
 

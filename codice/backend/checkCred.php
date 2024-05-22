@@ -7,10 +7,10 @@ $gest = new gestioneDatabase();
 $gest->connettiDb();
 $risposta = "";
 
-if(isset($_POST["email"]) && isset($_POST["password"]) ) 
+if(isset($_GET["email"]) && isset($_GET["password"]) ) 
 {
-    $email = $_POST['email'];
-    $password = $_POST['password']; 
+    $email = $_GET['email'];
+    $password = $_GET['password']; 
 
     //controllo che sia un admin
     $rispostaAdmin = $gest->checkAdmin($email, $password);
@@ -30,11 +30,6 @@ if(isset($_POST["email"]) && isset($_POST["password"]) )
         $id = $gest->takeId($email, $password);
         $_SESSION["id"] = $id;
         $_SESSION["admin"] = false;
-
-        if($risposta === false)
-        {
-            session_destroy();
-        }
         $gest->conn->close();
         echo json_encode(["status" => $risposta]);
     }
