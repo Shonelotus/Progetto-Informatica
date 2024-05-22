@@ -1,11 +1,6 @@
 <?php
 include_once("../gestioneDB/gestioneDatabase.php");
 
-if(!isset($_SESSION)) 
-{       
-    session_start();
-}
-
 header('Content-Type: application/json');
 
 $gest = new gestioneDatabase();

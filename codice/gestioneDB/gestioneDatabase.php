@@ -200,6 +200,22 @@ class gestioneDatabase
         }
         return $markers;
     }
+
+    /**
+     * funzione che mi permette di eliminare una stazione
+     */
+    public function deleteStazione($id) 
+    {
+        try 
+        {
+            $stmt = $this->conn->prepare("DELETE FROM stazione WHERE id = ?");
+            $stmt->bind_param("i", $id);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
     
 
     /*

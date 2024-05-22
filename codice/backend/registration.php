@@ -60,10 +60,8 @@ if (isset($_POST["nome"], $_POST["cognome"], $_POST["email"], $_POST["password"]
     /**
      * ATTENZIONE
      * LA TESSERA DEVE ESSERE UNIVOCA
+     * e di 6 caratteri
      */
-
-
-    //la tessere almeno di 6
     if (!preg_match("/^\d{6}$/", $numeroTessera)) 
     {
         $risposta = false;
