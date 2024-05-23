@@ -3,6 +3,11 @@ include_once("../gestioneDB/gestioneDatabase.php");
 
 header('Content-Type: application/json');
 
+if(!isset($_SESSION))
+{
+    session_start();
+}
+
 $gest = new gestioneDatabase();
 $gest->connettiDb();
 $risposta = "";
@@ -19,7 +24,7 @@ if(isset($_GET["email"]) && isset($_GET["password"]) )
         $rispostaAdmin = "admin";
         $id = $gest->takeIdAdmin($email, $password);
         $_SESSION["id"] = $id;
-        $_SESSION["admin"] = true;
+        $_SESSION["isAdmin"] = true;
         $gest->conn->close();
         echo json_encode(["status" => $rispostaAdmin]);    
     }

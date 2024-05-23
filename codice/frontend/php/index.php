@@ -1,4 +1,17 @@
 <?php
+    if(!isset($_SESSION))
+    {
+        session_start();
+    }
+
+    if(isset($_SESSION["isAdmin"]))
+    {
+        header('Location: adminPage.php');
+    }
+    else if(isset($_SESSION["isCliente"]))
+    {
+        header('Location: homepage.php');
+    }
     $key = parse_ini_file(realpath("../../../key.ini"));
     $tokenKey = $key['MAPS_KEY'];
 ?>

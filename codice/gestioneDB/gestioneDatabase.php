@@ -254,7 +254,7 @@ class gestioneDatabase
 
     public function uniqueDataBiciDb($gps, $rfid)
     {
-        $sql = "SELECT COUNT(*) as contatore FROM bicicletta WHERE gps = '$gps' or codiceRFID = '$rfid'";
+        $sql = "SELECT COUNT(*) as contatore FROM bicicletta WHERE gps = '$gps' or codiceRFID = '$rfid";
         $result = $this->conn->query($sql);
 
         if($result) 
@@ -273,9 +273,7 @@ class gestioneDatabase
             }
         } 
         else
-        {
             return false;
-        }
     }
     
     public function getBici()
@@ -286,7 +284,7 @@ class gestioneDatabase
         $statement = $this->conn->prepare($sql);
         $statement->execute();
         $result = $statement->get_result();
-        $prodotti = array();
+        $biciclette = array();
 
         //fin che ci sono risultati
         while($row = mysqli_fetch_assoc($result)) 
@@ -316,6 +314,112 @@ class gestioneDatabase
         $success = $statement->execute();
         return $success;
     }
+
+    public function getBiciByIdDB($id) 
+    {
+        $query = "SELECT gps, codiceRFID, latitude, longitude FROM bicicletta WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $bicicletta = $result->fetch_assoc();
+        $stmt->close();
+        return $bicicletta;
+    }
+
+    public function updateBiciDB($id, $gps, $rfid, $longitude, $latitude)
+    {
+        $sql = "UPDATE bicicletta SET gps = ?, codiceRFID = ?, latitude = ?, longitude = ? WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bind_param("iiddi", $gps, $rfid, $latitude, $longitude, $id);
+    
+        if ($stmt->execute()) 
+        {
+            if ($stmt->affected_rows > 0) 
+            {
+                $stmt->close();
+                return ['status' => true, 'message' => 'Bicicletta aggiornata con successo'];
+            } 
+            else 
+            {
+                $stmt->close();
+                return ['status' => false, 'message' => 'Nessuna modifica apportata alla bicicletta'];
+            }
+        } 
+        else 
+        {
+            $stmt->close();
+            return ['status' => false, 'message' => 'Errore nella query'];
+        }
+    }
+
+    public function getStazioniDB()
+    {
+
+        $sql = "SELECT s.id, s.nome, s.codice, s.numeroSlot,s.latitude, s.longitude FROM stazione as s";
+
+        $statement = $this->conn->prepare($sql);
+        $statement->execute();
+        $result = $statement->get_result();
+        $stazioni = array();
+
+        //fin che ci sono risultati
+        while($row = mysqli_fetch_assoc($result)) 
+        {
+            $stazioni[] = array
+            (
+                "id" => $row['id'], 
+                "nome" => $row['nome'],
+                "codice" => $row['codice'],
+                "numeroSlot" => $row['numeroSlot'],
+                "latitudine" => $row['latitude'],
+                "longitudine" => $row['longitude']
+            );
+        }
+
+        return $stazioni;
+    }
+
+    public function getStazioneByIdDB($id) 
+    {
+        $query = "SELECT nome, codice, numeroSlot, latitude, longitude FROM stazione WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stazione = $result->fetch_assoc();
+        $stmt->close();
+        return $stazione;
+    }
+
+    public function updateStazioneDB($id, $nome, $codice, $numeroSlot, $longitude, $latitude)
+    {
+        $sql = "UPDATE stazione SET nome = ?, codice = ?, numeroSlot = ?, latitude = ?, longitude = ? WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bind_param("siiddi", $nome, $codice, $numeroSlot, $latitude, $longitude, $id);
+    
+        if ($stmt->execute()) 
+        {
+            if ($stmt->affected_rows > 0) 
+            {
+                $stmt->close();
+                return ['status' => true, 'message' => 'Stazione aggiornata con successo'];
+            } 
+            else 
+            {
+                $stmt->close();
+                return ['status' => false, 'message' => 'Nessuna modifica apportata alla stazione'];
+            }
+        } 
+        else 
+        {
+            $stmt->close();
+            return ['status' => false, 'message' => 'Errore nella query'];
+        }
+    }
+    
 
     /*public function prendiTipologie()
     {

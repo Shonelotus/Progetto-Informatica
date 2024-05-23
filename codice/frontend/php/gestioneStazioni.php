@@ -16,7 +16,7 @@ if(!isset($_SESSION["isAdmin"]))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Biciclette</title>
+    <title>Gestione Stazioni</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -71,7 +71,7 @@ if(!isset($_SESSION["isAdmin"]))
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <a class="navbar-brand" href="#">
-            Gestione Biciclette
+            Gestione Stazioni
         </a>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
@@ -80,20 +80,20 @@ if(!isset($_SESSION["isAdmin"]))
         </ul>
     </nav>
     <div class="container">
-        <h1 class="header-text">Gestione Biciclette</h1>
+        <h1 class="header-text">Gestione Stazioni</h1>
 
         <table class="table table-striped table-light">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">GPS</th>
-                    <th scope="col">RFID</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Codice</th>
+                    <th scope="col">Numero slot</th>
                     <th scope="col">Latitudine</th>
                     <th scope="col">Longitudine</th>
-                    <th scope="col">Elimina</th>
                     <th scope="col">Modifica</th>
                 </tr>
             </thead>
-            <tbody id="tabella-biciclette">
+            <tbody id="tabella-stazioni">
             </tbody>
         </table>
     </div>
@@ -103,15 +103,16 @@ if(!isset($_SESSION["isAdmin"]))
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Script JavaScript personalizzato -->
     <script>
-        // Funzione per mostrare gli elementi nella tabella
-        function showElements() {
-            $.get("../../backend/getAllBici.php", {}, function (data) {
-                if (data["biciclette"]) {
-                    printAll(data["biciclette"]);
+        function showElements() 
+        {
+            $.get("../../backend/getAllStazioni.php", {}, function (data) 
+            {
+                if (data["stazioni"]) 
+                {
+                    printAll(data["stazioni"]);
                 } else {
-                    alert("Errore nel recupero dei dati delle biciclette.");
+                    alert("Errore nel recupero dei dati delle stazioni.");
                 }
             }).fail(function () {
                 alert("Errore di connessione con il server.");
@@ -119,53 +120,29 @@ if(!isset($_SESSION["isAdmin"]))
         }
 
         // Funzione per stampare tutte le biciclette nella tabella
-        // Funzione per stampare tutte le biciclette nella tabella
-        function printAll(biciclette) {
-            var $tbody = $("#tabella-biciclette");
+        function printAll(stazioni) 
+        {
+            var $tbody = $("#tabella-stazioni");
             $tbody.empty();
 
-            $.each(biciclette, function (i, bici) {
+            $.each(stazioni, function (i, stazione) {
                 var riga = $("<tr>");
-                riga.append($("<td>").text(bici.gps));
-                riga.append($("<td>").text(bici.rfid));
-                riga.append($("<td>").text(bici.latitudine));
-                riga.append($("<td>").text(bici.longitudine));
-
-                // Bottone Elimina
-                var bottoneElimina = $("<button>")
-                    .text("Elimina")
-                    .addClass("btn btn-danger")
-                    .attr("data-id", bici.id)
-                    .click(() => {
-                        var biciId = bici.id; // Usiamo bici.id direttamente, non $(this).data("id")
-                        var conferma = confirm("Eliminare il prodotto definitivamente?");
-                        if (conferma) {
-                            $.get("../../backend/deleteBici.php", { id: biciId }, function (data) {
-                                if (data["status"] == true) {
-                                    alert("Bicicletta eliminata correttamente");
-                                    showElements();
-                                } else {
-                                    alert("Errore durante l'eliminazione della bicicletta");
-                                }
-                            }).fail(function () {
-                                alert("Errore di connessione con il server.");
-                            });
-                        } else {
-                            alert("La bicicletta non è stata eliminata");
-                        }
-                    });
-                var cellaBottoneElimina = $("<td>").append(bottoneElimina);
+                riga.append($("<td>").text(stazione.nome));
+                riga.append($("<td>").text(stazione.codice));
+                riga.append($("<td>").text(stazione.numeroSlot));
+                riga.append($("<td>").text(stazione.latitudine));
+                riga.append($("<td>").text(stazione.longitudine));
 
                 // Bottone Modifica
                 var bottoneModifica = $("<button>")
                     .text("Modifica")
                     .addClass("btn btn-primary")
-                    .attr("data-id", bici.id)
+                    .attr("data-id", stazione.id)
                     .click(() => {
-                        var biciId = bici.id; // Usiamo bici.id direttamente, non $(this).data("id")
-                        $.get("../../backend/setBiciId.php", { id: biciId }, function (data) {
+                        var stazioneId = stazione.id; 
+                        $.get("../../backend/setStazioneId.php", { id: stazione.id}, function (data) {
                             if (data["status"] == true) {
-                                window.location = "modificaBici.php";
+                                window.location = "modificaStazione.php";
                             } else {
                                 alert("C'è stato un errore");
                             }
@@ -174,10 +151,7 @@ if(!isset($_SESSION["isAdmin"]))
                         });
                     });
                 var cellaBottoneModifica = $("<td>").append(bottoneModifica);
-
-                riga.append(cellaBottoneElimina);
                 riga.append(cellaBottoneModifica);
-
                 $tbody.append(riga);
             });
         }

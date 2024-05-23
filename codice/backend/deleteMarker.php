@@ -5,29 +5,40 @@ header('Content-Type: application/json');
 $gest = new gestioneDatabase();
 $gest->connettiDb();
 
-try 
+if(!isset($_SESSION))
 {
+    session_start();
+}
 
-    $input = json_decode(file_get_contents('php://input'), true);
-    if(isset($input['id'])) 
+if(isset($_SESSION["isAdmin"]))
+{
+    try 
     {
-        $id = $input['id'];
-        if($gest->deleteStazione($id)) 
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        if(isset($input['id'])) 
         {
-            echo json_encode(["status" => true, "message" => "Marker eliminato con successo!"]);
+            $id = $input['id'];
+            if($gest->deleteStazione($id)) 
+            {
+                echo json_encode(["status" => true, "message" => "Marker eliminato con successo!"]);
+            } 
+            else 
+            {
+                echo json_encode(["status" => false, "message" => "Errore durante l'eliminazione del marker."]);
+            }
         } 
         else 
         {
-            echo json_encode(["status" => false, "message" => "Errore durante l'eliminazione del marker."]);
+            echo json_encode(["status" => false, "message" => "Dati mancanti per l'eliminazione"]);
         }
-    } 
-    else 
+    }
+    catch (Exception $e) 
     {
-        echo json_encode(["status" => false, "message" => "Dati mancanti per l'eliminazione"]);
+        echo json_encode(["status" => false, "message" => "Errore del server: " . $e->getMessage()]);
     }
 }
-catch (Exception $e) 
-{
-    echo json_encode(["status" => false, "message" => "Errore del server: " . $e->getMessage()]);
-}
+else
+    echo json_encode(["status" => false, "message" => "Non sei un admin"]);
+
 ?>

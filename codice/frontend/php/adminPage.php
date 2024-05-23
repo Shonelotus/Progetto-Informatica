@@ -1,18 +1,13 @@
 <?php
-/*if(!isset($_SESSION))
+if(!isset($_SESSION))
 {
     session_start();
 }
 
-if(!isset($_SESSION["id"]))
+if(!isset($_SESSION["isAdmin"]))
 {
-    session_destroy();
-}
-else
-{
-    //devo reindirizzare ad adminpage
     header('Location: index.php');
-}*/
+}
 ?>
 
 <!DOCTYPE html>
@@ -68,17 +63,17 @@ else
             let scelta = $('#scelta').val();
             let azione = $('#azione').val();
             
-            if(azione == "Modifica" || azione == "Rimuovi" && scelta == "Bicicletta")
+            if((azione == "Modifica" || azione == "Rimuovi") && scelta == "Bicicletta")
             {
                 window.location.href = "rimuoviBici.php"
             }
-            else if(azione == "Aggiungi" && scelta == "Bicicletta")
+            else if((azione == "Aggiungi" || azione == "Rimuovi") && scelta == "Stazione")
             {
-                window.location.href = "bicicletta.php"
+                window.location.href = "stazione.php"
             }
             else
             {
-                window.location.href = "stazione.php"
+                window.location.href = "gestioneStazioni.php"
             }
         }
 
@@ -101,7 +96,6 @@ else
                         <label for="scelta">Seleziona un'opzione</label>
                         <select id="scelta" class="form-control">
                             <option>Stazione</option>
-                            <option>Slot</option>
                             <option>Bicicletta</option>
                         </select>
                     </div>
