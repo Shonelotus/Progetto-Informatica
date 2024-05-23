@@ -1,11 +1,9 @@
 <?php
-if(!isset($_SESSION))
-{
+if (!isset($_SESSION)) {
     session_start();
 }
 
-if(!isset($_SESSION["isAdmin"]))
-{
+if (!isset($_SESSION["isAdmin"])) {
     header('Location: index.php');
 }
 ?>
@@ -20,12 +18,14 @@ if(!isset($_SESSION["isAdmin"]))
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- DataTables CSS for Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             background: linear-gradient(90deg, rgba(0, 123, 255, 1) 0%, rgba(40, 167, 69, 1) 100%);
             color: #fff;
-            overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-x: hidden;
         }
 
         .navbar {
@@ -82,7 +82,7 @@ if(!isset($_SESSION["isAdmin"]))
     <div class="container">
         <h1 class="header-text">Gestione Biciclette</h1>
 
-        <table class="table table-striped table-light">
+        <table id="tabella-biciclette" class="table table-striped table-light">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">GPS</th>
@@ -93,7 +93,7 @@ if(!isset($_SESSION["isAdmin"]))
                     <th scope="col">Modifica</th>
                 </tr>
             </thead>
-            <tbody id="tabella-biciclette">
+            <tbody>
             </tbody>
         </table>
     </div>
@@ -102,14 +102,19 @@ if(!isset($_SESSION["isAdmin"]))
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- DataTables JS for Bootstrap -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Script JavaScript personalizzato -->
     <script>
+        var table;
+
         // Funzione per mostrare gli elementi nella tabella
         function showElements() {
             $.get("../../backend/getAllBici.php", {}, function (data) {
-                if (data["biciclette"]) {
-                    printAll(data["biciclette"]);
+                if (data.biciclette) {
+                    printAll(data.biciclette);
                 } else {
                     alert("Errore nel recupero dei dati delle biciclette.");
                 }
@@ -119,9 +124,8 @@ if(!isset($_SESSION["isAdmin"]))
         }
 
         // Funzione per stampare tutte le biciclette nella tabella
-        // Funzione per stampare tutte le biciclette nella tabella
         function printAll(biciclette) {
-            var $tbody = $("#tabella-biciclette");
+            var $tbody = $("#tabella-biciclette tbody");
             $tbody.empty();
 
             $.each(biciclette, function (i, bici) {
@@ -137,11 +141,11 @@ if(!isset($_SESSION["isAdmin"]))
                     .addClass("btn btn-danger")
                     .attr("data-id", bici.id)
                     .click(() => {
-                        var biciId = bici.id; // Usiamo bici.id direttamente, non $(this).data("id")
+                        var biciId = bici.id;
                         var conferma = confirm("Eliminare il prodotto definitivamente?");
                         if (conferma) {
                             $.get("../../backend/deleteBici.php", { id: biciId }, function (data) {
-                                if (data["status"] == true) {
+                                if (data.status) {
                                     alert("Bicicletta eliminata correttamente");
                                     showElements();
                                 } else {
@@ -162,9 +166,9 @@ if(!isset($_SESSION["isAdmin"]))
                     .addClass("btn btn-primary")
                     .attr("data-id", bici.id)
                     .click(() => {
-                        var biciId = bici.id; // Usiamo bici.id direttamente, non $(this).data("id")
+                        var biciId = bici.id;
                         $.get("../../backend/setBiciId.php", { id: biciId }, function (data) {
-                            if (data["status"] == true) {
+                            if (data.status) {
                                 window.location = "modificaBici.php";
                             } else {
                                 alert("C'è stato un errore");
@@ -180,20 +184,49 @@ if(!isset($_SESSION["isAdmin"]))
 
                 $tbody.append(riga);
             });
+
+            if (table) {
+                table.destroy();
+            }
+
+            // Inizializza DataTables
+            table = $('#tabella-biciclette').DataTable({
+                language: {
+                    "decimal": "",
+                    "emptyTable": "Nessun dato disponibile nella tabella",
+                    "info": "Mostra _START_ a _END_ di _TOTAL_ voci",
+                    "infoEmpty": "Mostra 0 a 0 di 0 voci",
+                    "infoFiltered": "(filtrato da _MAX_ voci totali)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostra _MENU_ voci",
+                    "loadingRecords": "Caricamento...",
+                    "processing": "Elaborazione...",
+                    "search": "Cerca:",
+                    "zeroRecords": "Nessun record corrispondente trovato",
+                    "paginate": {
+                        "first": "Primo",
+                        "last": "Ultimo",
+                        "next": "Prossimo",
+                        "previous": "Precedente"
+                    },
+                    "aria": {
+                        "sortAscending": ": attiva per ordinare la colonna in ordine crescente",
+                        "sortDescending": ": attiva per ordinare la colonna in ordine decrescente"
+                    }
+                },
+                pageLength: 10
+            });
         }
 
-        function homeAdmin()
-        {
-            window.location.href = "adminPage.php"
+        function homeAdmin() {
+            window.location.href = "adminPage.php";
         }
 
-        $(document).ready(function () 
-        {
+        $(document).ready(function() {
             showElements();
         });
     </script>
 </body>
 
 </html>
-
-

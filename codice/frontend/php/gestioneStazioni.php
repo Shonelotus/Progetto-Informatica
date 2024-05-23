@@ -1,15 +1,3 @@
-<?php
-if(!isset($_SESSION))
-{
-    session_start();
-}
-
-if(!isset($_SESSION["isAdmin"]))
-{
-    header('Location: index.php');
-}
-?>
-
 <!DOCTYPE html>
 <html lang="it">
 
@@ -20,6 +8,8 @@ if(!isset($_SESSION["isAdmin"]))
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -82,18 +72,18 @@ if(!isset($_SESSION["isAdmin"]))
     <div class="container">
         <h1 class="header-text">Gestione Stazioni</h1>
 
-        <table class="table table-striped table-light">
+        <table id="tabella-stazioni" class="table table-striped table-light">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Nome</th>
                     <th scope="col">Codice</th>
-                    <th scope="col">Numero slot</th>
+                    <th scope="col">N° slot</th>
                     <th scope="col">Latitudine</th>
                     <th scope="col">Longitudine</th>
                     <th scope="col">Modifica</th>
                 </tr>
             </thead>
-            <tbody id="tabella-stazioni">
+            <tbody>
             </tbody>
         </table>
     </div>
@@ -102,14 +92,17 @@ if(!isset($_SESSION["isAdmin"]))
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- DataTables JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <!-- DataTables Bootstrap JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
 
     <script>
-        function showElements() 
-        {
-            $.get("../../backend/getAllStazioni.php", {}, function (data) 
-            {
-                if (data["stazioni"]) 
-                {
+        var table;
+
+        function showElements() {
+            $.get("../../backend/getAllStazioni.php", {}, function (data) {
+                if (data["stazioni"]) {
                     printAll(data["stazioni"]);
                 } else {
                     alert("Errore nel recupero dei dati delle stazioni.");
@@ -119,10 +112,8 @@ if(!isset($_SESSION["isAdmin"]))
             });
         }
 
-        // Funzione per stampare tutte le biciclette nella tabella
-        function printAll(stazioni) 
-        {
-            var $tbody = $("#tabella-stazioni");
+        function printAll(stazioni) {
+            var $tbody = $("#tabella-stazioni tbody");
             $tbody.empty();
 
             $.each(stazioni, function (i, stazione) {
@@ -133,14 +124,12 @@ if(!isset($_SESSION["isAdmin"]))
                 riga.append($("<td>").text(stazione.latitudine));
                 riga.append($("<td>").text(stazione.longitudine));
 
-                // Bottone Modifica
                 var bottoneModifica = $("<button>")
                     .text("Modifica")
                     .addClass("btn btn-primary")
-                    .attr("data-id", stazione.id)
                     .click(() => {
-                        var stazioneId = stazione.id; 
-                        $.get("../../backend/setStazioneId.php", { id: stazione.id}, function (data) {
+                        var stazioneId = stazione.id;
+                        $.get("../../backend/setStazioneId.php", { id: stazioneId }, function (data) {
                             if (data["status"] == true) {
                                 window.location = "modificaStazione.php";
                             } else {
@@ -150,24 +139,53 @@ if(!isset($_SESSION["isAdmin"]))
                             alert("Errore di connessione con il server.");
                         });
                     });
+
                 var cellaBottoneModifica = $("<td>").append(bottoneModifica);
                 riga.append(cellaBottoneModifica);
+
                 $tbody.append(riga);
+            });
+
+            if (table) {
+                table.destroy();
+            }
+
+            table = $('#tabella-stazioni').DataTable({
+                language: {
+                    "decimal": "",
+                    "emptyTable": "Nessun dato disponibile nella tabella",
+                    "info": "Mostra _START_ a _END_ di _TOTAL_ elementi",
+                    "infoEmpty": "Mostra 0 a 0 di 0 voci",
+                    "infoFiltered": "(filtrato da _MAX_ voci totali)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostra _MENU_ voci",
+                    "loadingRecords": "Caricamento...",
+                    "processing": "Elaborazione...",
+                    "search": "Cerca:",
+                    "zeroRecords": "Nessun record corrispondente trovato",
+                    "paginate": {
+                        "first": "Primo",
+                        "last": "Ultimo",
+                        "next": "Prossimo",
+                        "previous": "Precedente"
+                    },
+                    "aria": {
+                        "sortAscending": ": attiva per ordinare la colonna in ordine crescente",
+                        "sortDescending": ": attiva per ordinare la colonna in ordine decrescente"
+                    }
+                },
+                pageLength: 10
             });
         }
 
-        function homeAdmin()
-        {
-            window.location.href = "adminPage.php"
+        function homeAdmin() {
+            window.location.href = "adminPage.php";
         }
 
-        $(document).ready(function () 
-        {
+        $(document).ready(function () {
             showElements();
         });
     </script>
 </body>
-
-</html>
-
 

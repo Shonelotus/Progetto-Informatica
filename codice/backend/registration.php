@@ -6,8 +6,6 @@ $gest = new gestioneDatabase();
 $gest->connettiDb();
 $risposta = "";
 
-print_r($_GET);
-
 if(isset($_GET["nome"], $_GET["cognome"], $_GET["email"], $_GET["password"], $_GET["numeroTessera"], $_GET["numeroCartaCredito"], $_GET["stato"], $_GET["provincia"], $_GET["paese"], $_GET["cap"], $_GET["via"])) 
 {
     $nome = $_GET['nome'];

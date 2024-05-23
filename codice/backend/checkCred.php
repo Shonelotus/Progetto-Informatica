@@ -34,7 +34,7 @@ if(isset($_GET["email"]) && isset($_GET["password"]) )
         $risposta = $gest->controlloCredenziali($email, $password);
         $id = $gest->takeId($email, $password);
         $_SESSION["id"] = $id;
-        $_SESSION["admin"] = false;
+        $_SESSION["isCliente"] = true;
         $gest->conn->close();
         echo json_encode(["status" => $risposta]);
     }

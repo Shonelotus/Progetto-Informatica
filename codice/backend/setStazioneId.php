@@ -2,13 +2,25 @@
 session_start();
 header('Content-Type: application/json');
 
-if(isset($_GET['id'])) 
+if(!isset($_SESSION))
 {
-    $_SESSION['idStazione'] = $_GET['id'];
-    echo json_encode(["status" => true]);
-} 
+    session_start();
+}
+
+if(isset($_SESSION["isAdmin"]))
+{
+    if(isset($_GET['id'])) 
+    {
+        $_SESSION['idStazione'] = $_GET['id'];
+        echo json_encode(["status" => true]);
+    } 
+    else 
+    {
+        echo json_encode(["status" => false, "message" => "ID non inviato"]);
+    }
+}
 else 
 {
-    echo json_encode(["status" => false, "message" => "ID non inviato"]);
+    echo json_encode(["status" => false, "message" => "Errore del server"]);
 }
 ?>

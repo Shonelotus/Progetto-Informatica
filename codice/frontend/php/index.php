@@ -46,6 +46,9 @@
         #map {
             border: 2px solid #fff;
             border-radius: 15px;
+            color: black;
+
+
         }
         .container {
             max-width: 900px; /* Set a maximum width to the container */

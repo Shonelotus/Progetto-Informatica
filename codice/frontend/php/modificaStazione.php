@@ -32,7 +32,7 @@ $idStazione = $_SESSION['idStazione'];
             overflow: hidden; /* Hide scroll bars */
         }
         .container {
-            max-width: 900px; /* Set a maximum width to the container */
+            max-width: 600px; /* Set a maximum width to the container */
         }
         .card {
             background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
@@ -147,29 +147,25 @@ $idStazione = $_SESSION['idStazione'];
             <div class="card-body">
                 <h2 class="card-title text-center">Modifica la stazione</h2>
                 <form>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="nome">Nome</label>
-                                <input type="text" class="form-control" id="nome">
-                            </div>
-                            <div class="form-group">
-                                <label for="codice">Codice </label>
-                                <input type="number" class="form-control" id="codice">
-                            </div>
-                            <div class="form-group">
-                                <label for="numeroSlot">Numero degli slot</label>
-                                <input type="number" class="form-control" id="numeroSlot">
-                            </div>
-                            <div class="form-group">
-                                <label for="latitude">Latitudine</label>
-                                <input type="text" class="form-control" id="latitude">
-                            </div>
-                            <div class="form-group">
-                                <label for="longitude">Longitudine</label>
-                                <input type="text" class="form-control" id="longitude">
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" class="form-control" id="nome">
+                    </div>
+                    <div class="form-group">
+                        <label for="codice">Codice </label>
+                        <input type="number" class="form-control" id="codice">
+                    </div>
+                    <div class="form-group">
+                        <label for="numeroSlot">Numero degli slot</label>
+                        <input type="number" class="form-control" id="numeroSlot">
+                    </div>
+                    <div class="form-group">
+                        <label for="latitude">Latitudine</label>
+                        <input type="text" class="form-control" id="latitude">
+                    </div>
+                    <div class="form-group">
+                        <label for="longitude">Longitudine</label>
+                        <input type="text" class="form-control" id="longitude">
                     </div>
                     <button type="button" class="btn btn-primary" id="modifica">Modifica</button>
                     <button type="button" class="btn btn-secondary" id="tornaIndietro">Torna alla gestione stazioni</button>

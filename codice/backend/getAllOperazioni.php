@@ -11,15 +11,15 @@ if(!isset($_SESSION))
     session_start();
 }
 
-
-if(isset($_SESSION["isAdmin"]))
+if(isset($_SESSION["isCliente"]))
 {
-    $stazioni = $gest->getStazioniDB();
+    $id = $_SESSION["id"];
+    $operazioni = $gest->getOperazioniDB($id);
     $gest->conn->close();
-    echo json_encode(["stazioni" => $stazioni]);
+    echo json_encode(["operazioni" => $operazioni]);
 }
 else
-    echo json_encode(["status" => false, "message" => "Non sei un admin"]);
+    echo json_encode(["status" => false, "message" => "Non sei un cliente"]);
 
 ?>
 

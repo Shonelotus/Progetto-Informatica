@@ -71,9 +71,13 @@ if(!isset($_SESSION["isAdmin"]))
             {
                 window.location.href = "stazione.php"
             }
-            else
+            else if(azione = "Modifica" && scelta == "Stazione")
             {
                 window.location.href = "gestioneStazioni.php"
+            }
+            else
+            {
+                window.location.href = "bicicletta.php"
             }
         }
 

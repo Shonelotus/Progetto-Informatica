@@ -419,28 +419,39 @@ class gestioneDatabase
             return ['status' => false, 'message' => 'Errore nella query'];
         }
     }
-    
 
-    /*public function prendiTipologie()
+    public function getOperazioniDB($id)
     {
-        $sql = "SELECT id, tipo FROM tipologia";
+        $sql = "SELECT o.*, s.nome AS nomeStazione, b.codiceRFID AS codiceBici 
+                FROM operazione AS o
+                LEFT JOIN stazione AS s ON o.idStazione = s.id
+                LEFT JOIN bicicletta AS b ON o.idBici = b.id
+                WHERE o.idCliente = ?";
+    
         $statement = $this->conn->prepare($sql);
+        $statement->bind_param("i", $id);
         $statement->execute();
         $result = $statement->get_result();
-        $tipologie = array();
-
-        while($row = mysqli_fetch_assoc($result)) 
-        {
-            $tipologie[] = array
-            (
-                "id" => $row['id'], 
-                "testo" => $row['tipo']
-            );        
-        }
-
-        return $tipologie;
-    }*/
+        $operazioni = array();
     
+        // Finché ci sono risultati
+        while ($row = mysqli_fetch_assoc($result)) {
+            $operazioni[] = array(
+                "id" => $row['id'],
+                "tipo" => $row['tipoOperazione'],
+                "data" => $row['dataOra'],
+                "distanza" => $row['distanzaPercorsa'],
+                "tariffa" => $row['tariffa'],
+                "idCliente" => $row['idCliente'],
+                "idBici" => $row['idBici'],
+                "idStazione" => $row['idStazione'],
+                "nomeStazione" => $row['nomeStazione'],
+                "codiceBici" => $row['codiceBici'],
+            );
+        }
+    
+        return $operazioni;
+    }
 
 }
 ?>

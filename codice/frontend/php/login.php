@@ -99,7 +99,8 @@
             }
         }
 
-        $(document).ready(function() {
+        $(document).ready(function() 
+        {
             $("#invia").click(function() 
             {
                 checkCred();
