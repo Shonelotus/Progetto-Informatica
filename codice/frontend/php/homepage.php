@@ -78,7 +78,7 @@ if(!isset($_SESSION["isCliente"]))
         </a>
     </nav>
     <div class="container">
-        <h1 class="header-text">Gestione Biciclette</h1>
+        <h1 class="header-text">Gestione Account</h1>
 
         <table id="tabella-operazioni" class="table table-striped table-light">
             <thead class="thead-dark">
@@ -149,9 +149,9 @@ if(!isset($_SESSION["isCliente"]))
                 language: {
                     "decimal": "",
                     "emptyTable": "Nessun dato disponibile nella tabella",
-                    "info": "Mostra _START_ a _END_ di _TOTAL_ voci",
+                    "info": "Mostra _START_ a _END_ di _TOTAL_ elementi",
                     "infoEmpty": "Mostra 0 a 0 di 0 voci",
-                    "infoFiltered": "(filtrato da _MAX_ voci totali)",
+                    "infoFiltered": "(filtrato da _MAX_ elementi totali)",
                     "infoPostFix": "",
                     "thousands": ",",
                     "lengthMenu": "Mostra _MENU_ voci",
